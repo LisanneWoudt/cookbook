@@ -1,0 +1,9 @@
+# ignore application.properties
+src/main/resources/application-development.properties
+
+# ignore .idea files
+.idea/*
+*.iml
+
+# target folder
+target/
