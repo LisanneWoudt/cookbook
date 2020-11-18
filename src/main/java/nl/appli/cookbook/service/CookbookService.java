@@ -4,6 +4,8 @@ import nl.appli.cookbook.dao.CookbookRepository;
 import nl.appli.cookbook.domain.Cookbook;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CookbookService {
 
@@ -21,4 +23,9 @@ public class CookbookService {
     public Cookbook addCookbook(Cookbook cookbook) {
         return this.cookbookRepository.save(cookbook);
     }
+
+    public List<Cookbook> findCookbookByChefId(Long chefId) {
+        return this.cookbookRepository.findByChefId(chefId);
+    }
+
 }

@@ -21,4 +21,12 @@ public class ChefService {
     public Chef addChef(Chef chef) {
         return this.chefRepository.save(chef);
     }
+
+    public Chef setLastSelectedCookbookId(Chef chef) {
+        Chef updatedChef = getChef(chef.getId());
+        updatedChef.setLastSelectedCookbookId(chef.getLastSelectedCookbookId());
+        chefRepository.save(updatedChef);
+        return updatedChef;
+    }
+
 }

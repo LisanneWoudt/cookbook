@@ -2,10 +2,9 @@ package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.domain.Cookbook;
 import nl.appli.cookbook.service.CookbookService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -28,5 +27,10 @@ public class CookbookController {
     @RequestMapping(method = POST, value = "/add")
     public Cookbook addCookbook(@RequestBody Cookbook cookbook) {
         return this.cookbookService.addCookbook(cookbook);
+    }
+
+    @RequestMapping(method = GET, value = "/by-chefId")
+    public List<Cookbook> findCookbookByChefId(@RequestParam Long chefId) {
+        return this.cookbookService.findCookbookByChefId(chefId);
     }
 }

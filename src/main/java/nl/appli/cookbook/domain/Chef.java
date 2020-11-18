@@ -18,8 +18,10 @@ public class Chef {
 
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "LAST_SELECTED_COOKBOOK_ID")
+    private Long lastSelectedCookbookId;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @OneToMany(mappedBy = "chef")
