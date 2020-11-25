@@ -61,6 +61,18 @@
 			<version>42.2.17</version>
 		</dependency>
 
+		<!-- AWS dependencies -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-context</artifactId>
+			<version>2.2.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-autoconfigure</artifactId>
+			<version>2.2.5.RELEASE</version>
+		</dependency>
+
 		<!-- Other dependencies -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -73,6 +85,12 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.11.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
 		</dependency>
 
 	</dependencies>

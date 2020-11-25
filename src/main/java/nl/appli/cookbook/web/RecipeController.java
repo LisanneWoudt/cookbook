@@ -25,7 +25,7 @@ public class RecipeController {
         return this.recipeService.getRecipe(id);
     }
 
-    @RequestMapping(method = POST, value = "/add")
+    @RequestMapping(method = POST, value = "add")
     public Recipe addRecipe(@RequestBody Recipe recipe) {
         return this.recipeService.addRecipe(recipe);
     }
