@@ -18,10 +18,18 @@ public class Recipe {
 
     private String description;
 
+    private Integer calories;
+
+    @Column(name = "INGREDIENT_LIST")
+    private String ingredientList;
+
+    private String directions;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> categories;
+
     @OneToMany(mappedBy = "recipe")
     private List<Ingredient> ingredients;
-
-    private Integer calories;
 
     @Column(name = "COOKBOOK_ID")
     private long cookbookId;
