@@ -28,7 +28,7 @@ public class Recipe {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> categories;
 
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.REMOVE)
     private List<Ingredient> ingredients;
 
     @Column(name = "COOKBOOK_ID")

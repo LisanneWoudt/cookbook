@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = "recipes/")
@@ -25,8 +24,13 @@ public class RecipeController {
         return this.recipeService.getRecipe(id);
     }
 
-    @RequestMapping(method = POST, value = "add")
-    public Recipe addRecipe(@RequestBody Recipe recipe) {
-        return this.recipeService.addRecipe(recipe);
+    @RequestMapping(method = POST, value = "save")
+    public Recipe saveRecipe(@RequestBody Recipe recipe) {
+        return this.recipeService.saveRecipe(recipe);
+    }
+
+    @RequestMapping(method = DELETE, value = "{id}")
+    public void deleteRecipe(@PathVariable Long id) {
+        this.recipeService.deleteRecipe(id);
     }
 }

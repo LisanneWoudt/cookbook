@@ -18,8 +18,13 @@ public class RecipeService {
                 .orElseThrow(() -> new IllegalStateException("Recipe with id " + id + " not found"));
     }
 
-    public Recipe addRecipe(Recipe recipe) {
+    public Recipe saveRecipe(Recipe recipe) {
         return this.recipeRepository.save(recipe);
+    }
+
+
+    public void deleteRecipe(Long id) {
+        this.recipeRepository.deleteById(id);
     }
 
 }
