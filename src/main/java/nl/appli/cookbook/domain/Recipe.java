@@ -25,8 +25,16 @@ public class Recipe {
 
     private String directions;
 
+    @Column(name = "SERVING_SIZE")
+    private Integer servingSize;
+
+    private String url;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> categories;
+
+    @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private EstimatedTime estimatedTime;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.REMOVE)
     private List<Ingredient> ingredients;

@@ -1,6 +1,7 @@
 package nl.appli.cookbook.service;
 
 import nl.appli.cookbook.dao.RecipeRepository;
+import nl.appli.cookbook.domain.EstimatedTime;
 import nl.appli.cookbook.domain.Recipe;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ public class RecipeService {
     }
 
     public Recipe saveRecipe(Recipe recipe) {
+        EstimatedTime estimatedTime = recipe.getEstimatedTime();
+        estimatedTime.setRecipe(recipe);
         return this.recipeRepository.save(recipe);
     }
 
