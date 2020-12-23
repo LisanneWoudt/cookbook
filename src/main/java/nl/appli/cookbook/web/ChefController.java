@@ -4,6 +4,8 @@ import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.service.ChefService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -14,6 +16,11 @@ public class ChefController {
 
     public ChefController(ChefService chefService) {
         this.chefService = chefService;
+    }
+
+    @RequestMapping(method = GET, value = "all")
+    public List<Chef> getAllChefs() {
+        return chefService.getAllChefs();
     }
 
     @RequestMapping(method = GET, value = "{id}")

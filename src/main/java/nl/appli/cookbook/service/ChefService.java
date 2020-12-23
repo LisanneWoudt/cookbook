@@ -5,6 +5,7 @@ import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.domain.Cookbook;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +17,12 @@ public class ChefService {
     public ChefService(ChefRepository chefRepository, CookbookService cookbookService) {
         this.chefRepository = chefRepository;
         this.cookbookService = cookbookService;
+    }
+
+    public List<Chef> getAllChefs() {
+        List<Chef> allChefs = new ArrayList<>();
+        this.chefRepository.findAll().forEach(allChefs::add);
+        return allChefs;
     }
 
     public Chef getChef(Long id) {
