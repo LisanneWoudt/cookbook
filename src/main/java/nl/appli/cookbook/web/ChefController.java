@@ -2,10 +2,7 @@ package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.service.ChefService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -24,14 +21,20 @@ public class ChefController {
         return chefService.getChef(id);
     }
 
-    @RequestMapping(method = POST, value = "/add")
+    @RequestMapping(method = POST, value = "add")
     public Chef addChef(@RequestBody Chef chef) {
         return chefService.addChef(chef);
     }
 
-    @RequestMapping(method = PUT, value = "/set-cookbook-id")
+    @RequestMapping(method = PUT, value = "set-cookbook-id")
     public Chef setLastSelectedCookbookId(@RequestBody Chef chef) {
         return chefService.setLastSelectedCookbookId(chef);
+    }
+
+    @RequestMapping(method = GET, value = "add-cookbook")
+    public Chef addCookbookToChef(@RequestParam String chefId,
+                                  @RequestParam String cookbookId) {
+        return chefService.addCookbookToChef(Long.valueOf(chefId), Long.valueOf(cookbookId));
     }
 
 }

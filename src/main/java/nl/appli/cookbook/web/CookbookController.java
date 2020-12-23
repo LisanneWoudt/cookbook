@@ -1,6 +1,7 @@
 package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.domain.Cookbook;
+import nl.appli.cookbook.service.ChefService;
 import nl.appli.cookbook.service.CookbookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +15,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class CookbookController {
 
     private final CookbookService cookbookService;
+    private final ChefService chefService;
 
-    public CookbookController(CookbookService cookbookService) {
+    public CookbookController(CookbookService cookbookService, ChefService chefService) {
         this.cookbookService = cookbookService;
+        this.chefService = chefService;
     }
 
     @RequestMapping(method = GET, value = "{id}")
@@ -31,6 +34,6 @@ public class CookbookController {
 
     @RequestMapping(method = GET, value = "/by-chefId")
     public List<Cookbook> findCookbookByChefId(@RequestParam Long chefId) {
-        return this.cookbookService.findCookbookByChefId(chefId);
+        return this.chefService.findCookbookByChefId(chefId);
     }
 }

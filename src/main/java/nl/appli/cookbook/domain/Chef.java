@@ -24,7 +24,12 @@ public class Chef {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @OneToMany(mappedBy = "chef")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "CHEF_COOKBOOK",
+            joinColumns = { @JoinColumn(name = "CHEF_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "COOKBOOK_ID") }
+    )
     private List<Cookbook> cookbooks;
 
 }

@@ -19,12 +19,15 @@ public class Cookbook {
     @OneToMany(mappedBy = "cookbook")
     private List<Recipe> recipes;
 
-    @Column(name = "CHEF_ID")
-    private long chefId;
-
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "CHEF_ID", insertable = false, updatable = false)
-    private Chef chef;
+    @ManyToMany(mappedBy = "cookbooks", fetch = FetchType.LAZY)
+    private List<Chef> chefs;
 
+    @Override
+    public String toString() {
+        return "Cookbook{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
