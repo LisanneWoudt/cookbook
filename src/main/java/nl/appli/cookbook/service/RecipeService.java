@@ -5,6 +5,9 @@ import nl.appli.cookbook.domain.EstimatedTime;
 import nl.appli.cookbook.domain.Recipe;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RecipeService {
 
@@ -17,6 +20,12 @@ public class RecipeService {
     public Recipe getRecipe(Long id) {
         return this.recipeRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Recipe with id " + id + " not found"));
+    }
+
+    public List<String> getRecipeCategories(Long cookbookId) {
+        return this.recipeRepository.findByCookbookId(cookbookId).stream()
+                .flatMap(recipe -> recipe.getCategories().stream())
+                .collect(Collectors.toList());
     }
 
     public Recipe saveRecipe(Recipe recipe) {

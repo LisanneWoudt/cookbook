@@ -21,14 +21,19 @@ public class JoinCookbookRequestService {
     }
 
     public JoinCookbookRequest saveRequest(JoinCookbookRequest request) {
+        if (Status.ACCEPTED.equals(request.getStatus())) {
+            chefService.addCookbookToChef(request.getChefId(), request.getCookbookId());
+        }
         return joinCookbookRequestRepository.save(request);
     }
 
     public long getRequestCount(Long chefId) {
         Chef chef = chefService.getChef(chefId);
         return chef.getCookbooks().stream()
-                .mapToLong(cookbook -> joinCookbookRequestRepository.findByCookbookId(cookbook.getId()).size())
-                .sum();
+                .flatMap(cookbook -> joinCookbookRequestRepository.findByCookbookId(cookbook.getId())
+                        .stream())
+                .filter(request -> request.getStatus().equals(Status.NEW))
+                .count();
     }
 
     public List<JoinCookbookRequest> getRequestsByChefId(Long chefId) {
@@ -36,12 +41,13 @@ public class JoinCookbookRequestService {
         return chef.getCookbooks().stream()
                 .flatMap(cookbook -> joinCookbookRequestRepository.findByCookbookId(cookbook.getId())
                         .stream())
+                .filter(request -> request.getStatus().equals(Status.NEW))
                 .collect(Collectors.toList());
     }
 
-    public boolean checkRequestSent(Long chefId, Long cookbookId) {
+    public JoinCookbookRequest checkRequestSent(Long chefId, Long cookbookId) {
         return joinCookbookRequestRepository.findByChefIdAndCookbookId(chefId, cookbookId)
-                .filter(request -> request.getStatus().equals(Status.NEW))
-                .isPresent();
+                .filter(request -> Status.NEW.equals(request.getStatus()) || Status.REJECTED.equals(request.getStatus()))
+                .orElse(null);
     }
 }

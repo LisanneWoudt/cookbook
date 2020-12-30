@@ -28,7 +28,7 @@ public class JoinCookbookRequestController {
     }
 
     @RequestMapping(method = GET, value = "check")
-    public boolean checkRequestSent(@RequestParam Long chefId, @RequestParam Long cookbookId) {
+    public JoinCookbookRequest checkRequestSent(@RequestParam Long chefId, @RequestParam Long cookbookId) {
         return this.joinCookbookRequestService.checkRequestSent(chefId, cookbookId);
     }
 

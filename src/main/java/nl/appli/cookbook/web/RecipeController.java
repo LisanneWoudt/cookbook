@@ -2,10 +2,9 @@ package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.domain.Recipe;
 import nl.appli.cookbook.service.RecipeService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -32,5 +31,10 @@ public class RecipeController {
     @RequestMapping(method = DELETE, value = "{id}")
     public void deleteRecipe(@PathVariable Long id) {
         this.recipeService.deleteRecipe(id);
+    }
+
+    @RequestMapping(method = GET, value = "categories")
+    public List<String> getRecipeCategories(@RequestParam long cookbookId) {
+        return this.recipeService.getRecipeCategories(cookbookId);
     }
 }
