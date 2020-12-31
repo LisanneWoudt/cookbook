@@ -3,20 +3,27 @@ package nl.appli.cookbook.service;
 import nl.appli.cookbook.dao.ChefRepository;
 import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.domain.Cookbook;
+import nl.appli.cookbook.exception.ChefNotUniqueException;
+import nl.appli.cookbook.exception.EmailNotUniqueException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChefService {
 
     private final ChefRepository chefRepository;
     private final CookbookService cookbookService;
+    private final PasswordEncoder passwordEncoder;
 
-    public ChefService(ChefRepository chefRepository, CookbookService cookbookService) {
+    public ChefService(ChefRepository chefRepository, CookbookService cookbookService, PasswordEncoder passwordEncoder) {
         this.chefRepository = chefRepository;
         this.cookbookService = cookbookService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Chef> getAllChefs() {
@@ -31,7 +38,22 @@ public class ChefService {
     }
 
     public Chef addChef(Chef chef) {
+        checkUsernameExists(chef);
+        checkEmailExists(chef);
+        chef.setPassword(passwordEncoder.encode(chef.getPassword()));
         return this.chefRepository.save(chef);
+    }
+
+    private void checkUsernameExists(Chef chef) {
+        if (chefRepository.findByUsername(chef.getUsername()).isPresent()) {
+            throw new ChefNotUniqueException("ChefNotUniqueException: Username already in use");
+        }
+    }
+
+    private void checkEmailExists(Chef chef) {
+        if (chefRepository.findByEmailIgnoreCase(chef.getEmail()).isPresent()) {
+            throw new EmailNotUniqueException("EmailNotUniqueException: Email already in use");
+        }
     }
 
     public Chef setLastSelectedCookbookId(Chef chef) {
@@ -53,6 +75,18 @@ public class ChefService {
 
     public List<Cookbook> findCookbookByChefId(Long chefId) {
         return getChef(chefId).getCookbooks();
+    }
+
+    public Chef authenticateUser(Chef chef) {
+        Optional<Chef> existingChef = chefRepository.findByEmailIgnoreCase(chef.getEmail());
+        if (existingChef.isPresent()) {
+            if (passwordEncoder.matches(chef.getPassword(), existingChef.get().getPassword())) {
+                return existingChef.get();
+            } else {
+                throw new BadCredentialsException("Invalid username/password supplied");
+            }
+        }
+        throw new BadCredentialsException("Invalid username/password supplied");
     }
 
 }
