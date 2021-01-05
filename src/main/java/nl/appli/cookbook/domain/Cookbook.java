@@ -19,6 +19,9 @@ public class Cookbook {
     @OneToMany(mappedBy = "cookbook")
     private List<Recipe> recipes;
 
+    @Column(name = "CREATOR_ID")
+    private Long creatorId;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "cookbooks", fetch = FetchType.LAZY)
     private List<Chef> chefs;

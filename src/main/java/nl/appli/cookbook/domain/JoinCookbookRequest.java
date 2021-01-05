@@ -16,6 +16,9 @@ public class JoinCookbookRequest {
     @Column(name = "COOKBOOK_ID")
     private long cookbookId;
 
+    @Transient
+    private String cookbookName;
+
     @Column(name = "CHEF_ID")
     private long chefId;
 
