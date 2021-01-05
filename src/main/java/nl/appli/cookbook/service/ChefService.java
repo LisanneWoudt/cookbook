@@ -89,4 +89,17 @@ public class ChefService {
         throw new BadCredentialsException("Invalid username/password supplied");
     }
 
+    public List<Chef> getMinimalChefs() {
+        List<Chef> minimalChefs = new ArrayList<>();
+        getAllChefs()
+                .forEach(chef -> {
+                    Chef minimalChef = new Chef();
+                    minimalChef.setId(chef.getId());
+                    minimalChef.setUsername(chef.getUsername());
+                    minimalChef.setCookbooks(chef.getCookbooks());
+                    minimalChefs.add(minimalChef);
+                });
+        return minimalChefs;
+    }
+
 }

@@ -1,7 +1,10 @@
 package nl.appli.cookbook.web;
 
+import nl.appli.cookbook.auth.annotations.IsAdmin;
+import nl.appli.cookbook.auth.annotations.IsAuthorizedChefId;
 import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.service.ChefService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +21,15 @@ public class ChefController {
         this.chefService = chefService;
     }
 
+    @IsAdmin
     @RequestMapping(method = GET, value = "all")
     public List<Chef> getAllChefs() {
         return chefService.getAllChefs();
     }
 
+    @IsAuthorizedChefId
     @RequestMapping(method = GET, value = "{id}")
-    public Chef getChef(@PathVariable  Long id) {
+    public Chef getChef(@PathVariable Long id) {
         return chefService.getChef(id);
     }
 
@@ -42,6 +47,12 @@ public class ChefController {
     public Chef addCookbookToChef(@RequestParam String chefId,
                                   @RequestParam String cookbookId) {
         return chefService.addCookbookToChef(Long.valueOf(chefId), Long.valueOf(cookbookId));
+    }
+
+    @PreAuthorize("permitAll()")
+    @RequestMapping(method = GET, value = "minimal")
+    public List<Chef> getMinimalChefs() {
+        return chefService.getMinimalChefs();
     }
 
 }
