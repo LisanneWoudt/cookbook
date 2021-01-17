@@ -1,7 +1,10 @@
 package nl.appli.cookbook.web;
 
+import nl.appli.cookbook.auth.annotations.IsRecipeIdInChefsCookbook;
+import nl.appli.cookbook.auth.annotations.IsRecipeInChefsCookbook;
 import nl.appli.cookbook.domain.Recipe;
 import nl.appli.cookbook.service.RecipeService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,6 +13,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = "recipes/")
+@PreAuthorize("isAuthenticated()")
 public class RecipeController {
 
     private final RecipeService recipeService;
@@ -23,11 +27,13 @@ public class RecipeController {
         return this.recipeService.getRecipe(id);
     }
 
+    @IsRecipeInChefsCookbook
     @RequestMapping(method = POST, value = "save")
     public Recipe saveRecipe(@RequestBody Recipe recipe) {
         return this.recipeService.saveRecipe(recipe);
     }
 
+    @IsRecipeIdInChefsCookbook
     @RequestMapping(method = DELETE, value = "{id}")
     public void deleteRecipe(@PathVariable Long id) {
         this.recipeService.deleteRecipe(id);

@@ -1,6 +1,7 @@
 package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.auth.annotations.IsAdmin;
+import nl.appli.cookbook.auth.annotations.IsAuthorizedChef;
 import nl.appli.cookbook.auth.annotations.IsAuthorizedChefId;
 import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.service.ChefService;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping(value = "chefs/")
+@PreAuthorize("isAuthenticated()")
 public class ChefController {
 
     private final ChefService chefService;
@@ -33,23 +36,19 @@ public class ChefController {
         return chefService.getChef(id);
     }
 
-    @RequestMapping(method = POST, value = "add")
-    public Chef addChef(@RequestBody Chef chef) {
-        return chefService.addChef(chef);
-    }
-
+    @IsAuthorizedChef
     @RequestMapping(method = PUT, value = "set-cookbook-id")
     public Chef setLastSelectedCookbookId(@RequestBody Chef chef) {
         return chefService.setLastSelectedCookbookId(chef);
     }
 
+    @IsAuthorizedChefId
     @RequestMapping(method = GET, value = "add-cookbook")
-    public Chef addCookbookToChef(@RequestParam String chefId,
+    public Chef addCookbookToChef(@RequestParam String id,
                                   @RequestParam String cookbookId) {
-        return chefService.addCookbookToChef(Long.valueOf(chefId), Long.valueOf(cookbookId));
+        return chefService.addCookbookToChef(Long.valueOf(id), Long.valueOf(cookbookId));
     }
 
-    @PreAuthorize("permitAll()")
     @RequestMapping(method = GET, value = "minimal")
     public List<Chef> getMinimalChefs() {
         return chefService.getMinimalChefs();

@@ -1,6 +1,7 @@
 package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.service.ImageService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 @RequestMapping(value = "images/")
 @MultipartConfig(maxFileSize = 1024*1024*1024, maxRequestSize = 1024*1024*1024)
+@PreAuthorize("isAuthenticated()")
 public class ImageController {
 
     private final ImageService imageService;

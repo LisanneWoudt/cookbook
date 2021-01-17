@@ -89,6 +89,11 @@ public class ChefService {
         throw new BadCredentialsException("Invalid username/password supplied");
     }
 
+    public Chef findChefByCookbookId(Long cookbookId) {
+        Cookbook cookbook = cookbookService.getCookbook(cookbookId);
+        return this.getChef(cookbook.getCreatorId());
+    }
+
     public List<Chef> getMinimalChefs() {
         List<Chef> minimalChefs = new ArrayList<>();
         getAllChefs()

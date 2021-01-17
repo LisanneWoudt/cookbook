@@ -1,10 +1,11 @@
 package nl.appli.cookbook.service.security;
 
-import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.service.ChefService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component("chefSecurityService")
+import static java.util.Objects.isNull;
+
+@Service
 public class ChefSecurityService {
 
     private final ChefService chefService;
@@ -15,10 +16,13 @@ public class ChefSecurityService {
 
     public boolean hasPermission(String name, Long id) {
         if (id != null) {
-            Chef chef = chefService.getChef(id);
-            return chef.getUsername().equals(name);
+            return name.equals(chefService.getChef(id).getUsername());
         }
         return false;
+    }
+
+    public boolean hasPermission(String name) {
+        return !isNull(name) && !name.isBlank();
     }
 
 }
