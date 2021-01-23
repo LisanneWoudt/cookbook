@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -43,4 +44,10 @@ public class RecipeController {
     public List<String> getRecipeCategories(@RequestParam long cookbookId) {
         return this.recipeService.getRecipeCategories(cookbookId);
     }
+
+    @RequestMapping(method = GET, value = "ids-per-category")
+    public Map<String, List<Long>> getRecipeIdsPerCategory(@RequestParam long cookbookId) {
+        return this.recipeService.getRecipeIdsPerCategory(cookbookId);
+    }
+
 }
