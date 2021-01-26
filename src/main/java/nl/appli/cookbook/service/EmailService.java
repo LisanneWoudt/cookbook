@@ -35,7 +35,7 @@ public class EmailService {
         String subject = "Request to join cookbook";
         String mainText = "Someone wants to join your cookbook '" + request.getCookbookName() + "'. " +
                 "Open the Cookbook app to accept or reject the request.";
-        sendSimpleMessage(chef.getEmail(), subject, mainText);
+        sendSimpleMessage(chef, subject, mainText);
     }
 
     public void sendRequestAcceptedMail(JoinCookbookRequest request) {
@@ -43,7 +43,7 @@ public class EmailService {
         String subject = "Request to join cookbook accepted";
         String mainText = "Your request to join cookbook '" + request.getCookbookName() + "' has been accepted. " +
                 "You can now add and edit recipes in this cookbook. Open the app for more details.";
-        sendSimpleMessage(chef.getEmail(), subject, mainText);
+        sendSimpleMessage(chef, subject, mainText);
     }
 
     public void sendRequestRejectedMail(JoinCookbookRequest request) {
@@ -51,16 +51,20 @@ public class EmailService {
         String subject = "Request to join cookbook rejected";
         String mainText = "Unfortunately, your request to join cookbook '" + request.getCookbookName() + "' has been rejected. " +
                 "The owner of the cookbook doesn't allow you to add or edit recipes in this cookbook. You can still view all recipes.";
-        sendSimpleMessage(chef.getEmail(), subject, mainText);
+        sendSimpleMessage(chef, subject, mainText);
     }
 
-    public void sendSimpleMessage(String to, String subject, String mainText) {
-        LOGGER.info("Sending e-mail to " + to);
+    public void sendSimpleMessage(Chef chef, String subject, String mainText) {
+        if (!chef.isEmailNotifications()) {
+            return;
+        }
+
+        LOGGER.info("Sending e-mail to " + chef.getEmail());
         Session session = Session.getDefaultInstance(System.getProperties(),null);
         MimeMessage message = new MimeMessage(session);
 
         try {
-            message.setRecipients(Message.RecipientType.TO, to);
+            message.setRecipients(Message.RecipientType.TO, chef.getEmail());
             message.setSubject(subject);
             message.setContent(getContent(subject, mainText));
             emailSender.send(message);

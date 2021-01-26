@@ -63,6 +63,12 @@ public class ChefService {
         return updatedChef;
     }
 
+    public void setEmailNotifications(Chef chef) {
+        Chef updatedChef = getChef(chef.getId());
+        updatedChef.setEmailNotifications(chef.isEmailNotifications());
+        chefRepository.save(updatedChef);
+    }
+
     public Chef addCookbookToChef(Long chefId, Long cookbookId) {
         Chef chef = getChef(chefId);
         Cookbook cookbook = cookbookService.getCookbook(cookbookId);

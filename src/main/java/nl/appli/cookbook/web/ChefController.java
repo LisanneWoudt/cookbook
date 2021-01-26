@@ -42,6 +42,12 @@ public class ChefController {
         return chefService.setLastSelectedCookbookId(chef);
     }
 
+    @IsAuthorizedChef
+    @RequestMapping(method = PUT, value = "set-email-notifications")
+    public void setEmailNotifications(@RequestBody Chef chef) {
+        chefService.setEmailNotifications(chef);
+    }
+
     @IsAuthorizedChefId
     @RequestMapping(method = GET, value = "add-cookbook")
     public Chef addCookbookToChef(@RequestParam String id,
