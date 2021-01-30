@@ -5,6 +5,7 @@ import nl.appli.cookbook.domain.Chef;
 import nl.appli.cookbook.domain.Cookbook;
 import nl.appli.cookbook.exception.ChefNotUniqueException;
 import nl.appli.cookbook.exception.EmailNotUniqueException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,17 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class ChefService {
 
     private final ChefRepository chefRepository;
     private final CookbookService cookbookService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public ChefService(ChefRepository chefRepository, CookbookService cookbookService, PasswordEncoder passwordEncoder) {
+    public ChefService(ChefRepository chefRepository, CookbookService cookbookService, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.chefRepository = chefRepository;
         this.cookbookService = cookbookService;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     public List<Chef> getAllChefs() {
@@ -37,10 +42,14 @@ public class ChefService {
                 .orElseThrow(() -> new IllegalStateException("Chef with id " + id + " not found"));
     }
 
-    public Chef addChef(Chef chef) {
-        checkUsernameExists(chef);
-        checkEmailExists(chef);
-        chef.setPassword(passwordEncoder.encode(chef.getPassword()));
+    public Chef saveChef(Chef chef) {
+        Optional<Chef> optExistingChef = chefRepository.findById(chef.getId());
+        if (optExistingChef.isPresent() && !isNull(chef.getPassword())) {
+            chef.setPassword(passwordEncoder.encode(chef.getPassword()));
+        } else {
+            checkUsernameExists(chef);
+            checkEmailExists(chef);
+        }
         return this.chefRepository.save(chef);
     }
 
@@ -111,6 +120,19 @@ public class ChefService {
                     minimalChefs.add(minimalChef);
                 });
         return minimalChefs;
+    }
+
+    public void resetPassword(Chef chef) {
+        Optional<Chef> existingChef = chefRepository.findByEmailIgnoreCase(chef.getEmail());
+        existingChef.ifPresent(this::resetPasswordAndInformUser);
+    }
+
+    private void resetPasswordAndInformUser(Chef chef) {
+        String generatedPassword =  RandomStringUtils.random(7, true, true);
+        chef.setPassword(passwordEncoder.encode(generatedPassword));
+        chef.setPasswordReset(true);
+        chefRepository.save(chef);
+        emailService.sendPasswordResetMessage(chef, generatedPassword);
     }
 
 }

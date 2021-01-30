@@ -15,24 +15,31 @@ public class JoinCookbookRequestService {
     private final JoinCookbookRequestRepository joinCookbookRequestRepository;
     private final ChefService chefService;
     private final EmailService emailService;
+    private final CookbookService cookbookService;
 
-    public JoinCookbookRequestService(JoinCookbookRequestRepository joinCookbookRequestRepository, ChefService chefService, EmailService emailService) {
+    public JoinCookbookRequestService(JoinCookbookRequestRepository joinCookbookRequestRepository, ChefService chefService, EmailService emailService, CookbookService cookbookService) {
         this.joinCookbookRequestRepository = joinCookbookRequestRepository;
         this.chefService = chefService;
         this.emailService = emailService;
+        this.cookbookService = cookbookService;
     }
 
     public JoinCookbookRequest saveRequest(JoinCookbookRequest request) {
+        Chef chef;
         switch(request.getStatus()) {
             case ACCEPTED:
                 chefService.addCookbookToChef(request.getChefId(), request.getCookbookId());
-                emailService.sendRequestAcceptedMail(request);
+                chef = chefService.getChef(request.getChefId());
+                emailService.sendRequestAcceptedMail(request, chef);
                 break;
             case REJECTED:
-                emailService.sendRequestRejectedMail(request);
+                chef = chefService.getChef(request.getChefId());
+                emailService.sendRequestRejectedMail(request, chef);
                 break;
             case NEW:
-                emailService.sendNewRequestMail(request);
+                Long chefId = cookbookService.getCookbook(request.getCookbookId()).getCreatorId();
+                chef = chefService.getChef(chefId);
+                emailService.sendNewRequestMail(request, chef);
                 break;
         }
         return joinCookbookRequestRepository.save(request);

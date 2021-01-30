@@ -15,7 +15,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping(value = "chefs/")
-@PreAuthorize("isAuthenticated()")
 public class ChefController {
 
     private final ChefService chefService;
@@ -34,6 +33,12 @@ public class ChefController {
     @RequestMapping(method = GET, value = "{id}")
     public Chef getChef(@PathVariable Long id) {
         return chefService.getChef(id);
+    }
+
+    @IsAuthorizedChef
+    @RequestMapping(method = PUT, value = "update")
+    public Chef updateChef(@RequestBody Chef chef) {
+        return chefService.saveChef(chef);
     }
 
     @IsAuthorizedChef
@@ -56,8 +61,14 @@ public class ChefController {
     }
 
     @RequestMapping(method = GET, value = "minimal")
+    @PreAuthorize("isAuthenticated()")
     public List<Chef> getMinimalChefs() {
         return chefService.getMinimalChefs();
+    }
+
+    @PostMapping(value ="reset-password")
+    public void resetPassword(@RequestBody Chef chef) {
+        chefService.resetPassword(chef);
     }
 
 }

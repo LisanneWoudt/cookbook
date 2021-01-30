@@ -45,7 +45,7 @@ public class AuthController {
 
     @PostMapping("register")
     public ResponseEntity<Map<Object, Object>> register(@RequestBody Chef data) {
-        Chef chef = chefService.addChef(data);
+        Chef chef = chefService.saveChef(data);
         String username = chef.getUsername();
         try {
             return getAuthorizationData(chef, username);

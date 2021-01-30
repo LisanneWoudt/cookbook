@@ -20,42 +20,40 @@ public class EmailService {
     private static final Logger LOGGER = Logger.getLogger(EmailService.class.getName());
 
     private final JavaMailSender emailSender;
-    private final ChefService chefService;
-    private final CookbookService cookbookService;
 
-    public EmailService(JavaMailSender javaMailSender, ChefService chefService, CookbookService cookbookService) {
+    public EmailService(JavaMailSender javaMailSender) {
         this.emailSender = javaMailSender;
-        this.chefService = chefService;
-        this.cookbookService = cookbookService;
     }
 
-    public void sendNewRequestMail(JoinCookbookRequest request) {
-        Long chefId = cookbookService.getCookbook(request.getCookbookId()).getCreatorId();
-        Chef chef = chefService.getChef(chefId);
+    public void sendNewRequestMail(JoinCookbookRequest request, Chef chef) {
         String subject = "Request to join cookbook";
         String mainText = "Someone wants to join your cookbook '" + request.getCookbookName() + "'. " +
                 "Open the Cookbook app to accept or reject the request.";
         sendSimpleMessage(chef, subject, mainText);
     }
 
-    public void sendRequestAcceptedMail(JoinCookbookRequest request) {
-        Chef chef = chefService.getChef(request.getChefId());
+    public void sendRequestAcceptedMail(JoinCookbookRequest request, Chef chef) {
         String subject = "Request to join cookbook accepted";
         String mainText = "Your request to join cookbook '" + request.getCookbookName() + "' has been accepted. " +
                 "You can now add and edit recipes in this cookbook. Open the app for more details.";
         sendSimpleMessage(chef, subject, mainText);
     }
 
-    public void sendRequestRejectedMail(JoinCookbookRequest request) {
-        Chef chef = chefService.getChef(request.getChefId());
+    public void sendRequestRejectedMail(JoinCookbookRequest request, Chef chef) {
         String subject = "Request to join cookbook rejected";
         String mainText = "Unfortunately, your request to join cookbook '" + request.getCookbookName() + "' has been rejected. " +
                 "The owner of the cookbook doesn't allow you to add or edit recipes in this cookbook. You can still view all recipes.";
         sendSimpleMessage(chef, subject, mainText);
     }
 
+    public void sendPasswordResetMessage(Chef chef, String password) {
+        String subject = "Password reset";
+        String mainText = "Your new password is: " + password;
+        sendSimpleMessage(chef, subject, mainText);
+    }
+
     public void sendSimpleMessage(Chef chef, String subject, String mainText) {
-        if (!chef.isEmailNotifications()) {
+        if (!"Password reset".equals(subject) && !chef.isEmailNotifications()) {
             return;
         }
 
