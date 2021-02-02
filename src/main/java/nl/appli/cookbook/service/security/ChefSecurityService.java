@@ -22,7 +22,7 @@ public class ChefSecurityService {
     }
 
     public boolean hasPermission(String name) {
-        return !isNull(name) && !name.isBlank();
+        return !isNull(name) && !name.isEmpty();
     }
 
 }
