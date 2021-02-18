@@ -44,9 +44,10 @@ public class ChefService {
 
     public Chef saveChef(Chef chef) {
         Optional<Chef> optExistingChef = chefRepository.findById(chef.getId());
-        if (optExistingChef.isPresent() && !isNull(chef.getPassword())) {
+        if (!isNull(chef.getPassword())) {
             chef.setPassword(passwordEncoder.encode(chef.getPassword()));
-        } else {
+        }
+        if (!optExistingChef.isPresent()) {
             checkUsernameExists(chef);
             checkEmailExists(chef);
         }

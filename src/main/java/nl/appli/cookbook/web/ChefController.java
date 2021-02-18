@@ -66,7 +66,6 @@ public class ChefController {
         return chefService.getMinimalChefs();
     }
 
-    @PreAuthorize("permitAll()")
     @PostMapping(value ="reset-password")
     public void resetPassword(@RequestBody Chef chef) {
         chefService.resetPassword(chef);
