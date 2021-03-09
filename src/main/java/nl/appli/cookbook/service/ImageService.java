@@ -16,6 +16,7 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class ImageService {
@@ -29,6 +30,14 @@ public class ImageService {
     public void uploadImage(String filename, MultipartFile multipart) throws IOException {
         s3Wrapper.uploadImage(filename, resizeImage(multipart, "preview"));
         s3Wrapper.uploadImage(filename + "_thumbnail", resizeImage((multipart), "thumbnail"));
+    }
+
+    public void uploadImages(String filename, List<MultipartFile> multipartFiles) throws IOException {
+        int count = 1;
+        for (MultipartFile file: multipartFiles) {
+            uploadImage(filename + "_" + count, file);
+            count ++;
+        }
     }
 
     public byte[] downloadImage(String objectKey) {
@@ -47,6 +56,12 @@ public class ImageService {
         catch(Exception e) {
             System.out.println(e);
             return null;
+        }
+    }
+
+    void deleteImages(String key, int imgCount) {
+        for (int i = 1; i <= imgCount; i++) {
+            s3Wrapper.deleteObject(key + "_" + i);
         }
     }
 

@@ -30,6 +30,9 @@ public class Recipe {
 
     private String url;
 
+    @Column(name = "IMAGE_COUNT")
+    private int imageCount;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> categories;
 

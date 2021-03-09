@@ -8,15 +8,18 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final ImageService imageService;
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(RecipeRepository recipeRepository, ImageService imageService) {
         this.recipeRepository = recipeRepository;
+        this.imageService = imageService;
     }
 
     public Recipe getRecipe(Long id) {
@@ -46,6 +49,10 @@ public class RecipeService {
     public Recipe saveRecipe(Recipe recipe) {
         EstimatedTime estimatedTime = recipe.getEstimatedTime();
         estimatedTime.setRecipe(recipe);
+
+        Optional<Recipe> recipeToUpdate = recipeRepository.findById(recipe.getId());
+        recipeToUpdate.ifPresent(recipeInDb -> imageService.deleteImages(String.valueOf(recipe.getId()), recipeInDb.getImageCount()));
+
         return this.recipeRepository.save(recipe);
     }
 
