@@ -2,6 +2,7 @@ package nl.appli.cookbook.web;
 
 import nl.appli.cookbook.auth.annotations.IsAuthorizedChefId;
 import nl.appli.cookbook.auth.annotations.IsCookbookOwner;
+import nl.appli.cookbook.auth.annotations.IsCookbookOwnerId;
 import nl.appli.cookbook.domain.Cookbook;
 import nl.appli.cookbook.service.ChefService;
 import nl.appli.cookbook.service.CookbookService;
@@ -10,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = "cookbooks/")
@@ -32,9 +32,15 @@ public class CookbookController {
     }
 
     @IsCookbookOwner
-    @RequestMapping(method = POST, value = "/add")
-    public Cookbook addCookbook(@RequestBody Cookbook cookbook) {
-        return this.cookbookService.addCookbook(cookbook);
+    @RequestMapping(method = POST, value = "/save")
+    public Cookbook saveCookbook(@RequestBody Cookbook cookbook) {
+        return this.cookbookService.saveCookbook(cookbook);
+    }
+
+    @IsCookbookOwnerId
+    @RequestMapping(method = DELETE, value = "{id}")
+    public void deleteCookbook(@PathVariable Long id) {
+        this.cookbookService.deleteCookbook(id);
     }
 
     @IsAuthorizedChefId

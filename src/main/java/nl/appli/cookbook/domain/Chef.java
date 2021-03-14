@@ -37,7 +37,7 @@ public class Chef implements UserDetails {
     @Column(name = "EMAIL_NOTIFICATIONS")
     private boolean emailNotifications;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "CHEF_COOKBOOK",
             joinColumns = { @JoinColumn(name = "CHEF_ID") },

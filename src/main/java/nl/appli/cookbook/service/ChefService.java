@@ -84,7 +84,7 @@ public class ChefService {
         Cookbook cookbook = cookbookService.getCookbook(cookbookId);
         cookbook.getChefs().add(chef);
         chef.getCookbooks().add(cookbook);
-        this.cookbookService.addCookbook(cookbook);
+        this.cookbookService.saveCookbook(cookbook);
         chef.setLastSelectedCookbookId(cookbook.getId());
         return this.chefRepository.save(chef);
     }

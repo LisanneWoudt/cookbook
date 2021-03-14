@@ -16,7 +16,7 @@ public class Cookbook {
 
     private String name;
 
-    @OneToMany(mappedBy = "cookbook")
+    @OneToMany(mappedBy = "cookbook", cascade = CascadeType.REMOVE)
     private List<Recipe> recipes;
 
     @Column(name = "CREATOR_ID")
@@ -25,6 +25,10 @@ public class Cookbook {
     @JsonIgnore
     @ManyToMany(mappedBy = "cookbooks", fetch = FetchType.LAZY)
     private List<Chef> chefs;
+
+    public void removeCookbook(List<Chef> chefs) {
+        chefs.forEach(chef -> chef.getCookbooks().remove(this));
+    }
 
     @Override
     public String toString() {
