@@ -37,6 +37,13 @@ public class CookbookController {
         return this.cookbookService.saveCookbook(cookbook);
     }
 
+    //TODO: delete this after new release
+    @IsCookbookOwner
+    @RequestMapping(method = POST, value = "/add")
+    public Cookbook saveCookbookDeprecated(@RequestBody Cookbook cookbook) {
+        return this.cookbookService.saveCookbook(cookbook);
+    }
+
     @IsCookbookOwnerId
     @RequestMapping(method = DELETE, value = "{id}")
     public void deleteCookbook(@PathVariable Long id) {
