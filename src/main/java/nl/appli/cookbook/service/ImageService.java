@@ -100,11 +100,11 @@ public class ImageService {
     }
 
     public int calculatePreviewHeightSize(int height) {
-        int divideBy =  height / 500;
+        int divideBy =  height / 1000;
         return calculateSize(divideBy, height);
     }
     public int calculatePreviewWidthSize(int width) {
-        int divideBy = width / 400;
+        int divideBy = width / 800;
         return calculateSize(divideBy, width);
     }
     public int calculateThumbnailSize(int size) {
