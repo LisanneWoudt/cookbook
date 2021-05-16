@@ -68,13 +68,16 @@ public class ImageService {
     private InputStream resizeImage(MultipartFile multipartFile, String imageScale) throws IOException {
         BufferedImage image = ImageIO.read(multipartFile.getInputStream());
         BufferedImage resizedImage;
+        float compressionQuality;
 
         if (imageScale.equals("thumbnail")) {
             resizedImage = Scalr.resize(image, calculateThumbnailSize(image.getWidth()),
                     calculateThumbnailSize(image.getHeight()));
+            compressionQuality = 0.75f;
         } else {
             resizedImage = Scalr.resize(image, calculatePreviewWidthSize(image.getWidth()),
                     calculatePreviewHeightSize(image.getHeight()));
+            compressionQuality = 1f;
         }
 
         File resizedFile = new File(imageScale + ".jpg");
@@ -84,7 +87,7 @@ public class ImageService {
         ImageWriter writer = writers.next();
         ImageWriteParam param = writer.getDefaultWriteParam();
         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(0.75f);  // Change the quality value you prefer
+        param.setCompressionQuality(compressionQuality);
 
         ImageOutputStream ios = ImageIO.createImageOutputStream(os);
         writer.setOutput(ios);
